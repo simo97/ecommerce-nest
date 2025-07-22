@@ -5,6 +5,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommonModule } from './common/common.module';
 import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+//import { CartModule } from './cart/cart.module';
+//import { CatalogueModule } from './catalogue/catalogue.module';
+//import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [
@@ -28,6 +32,10 @@ import { AuthModule } from './auth/auth.module';
     }),
     CommonModule,
     AuthModule,
+    UsersModule,
+//    CartModule,
+//    CatalogueModule,
+//    OrderModule,
   ],
   controllers: [AppController],
   providers: [AppService],
