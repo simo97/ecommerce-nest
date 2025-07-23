@@ -7,7 +7,7 @@ import { CommonModule } from './common/common.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 //import { CartModule } from './cart/cart.module';
-//import { CatalogueModule } from './catalogue/catalogue.module';
+import { CatalogueModule } from './catalogue/catalogue.module';
 //import { OrderModule } from './order/order.module';
 
 @Module({
@@ -34,7 +34,7 @@ import { UsersModule } from './users/users.module';
     AuthModule,
     UsersModule,
     //    CartModule,
-    //    CatalogueModule,
+        CatalogueModule,
     //    OrderModule,
   ],
   controllers: [AppController],
