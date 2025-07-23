@@ -25,16 +25,16 @@ export class Product extends BaseEntity {
   isActive: boolean;
 
   // Relationships
-  @ManyToOne(() => Category, category => category.products)
+  @ManyToOne(() => Category, (category) => category.products)
   @JoinColumn({ name: 'categoryId' })
   category: Category;
 
   @Column('uuid')
   categoryId: string;
 
-  @OneToMany(() => CartItem, cartItem => cartItem.product)
+  @OneToMany(() => CartItem, (cartItem) => cartItem.product)
   cartItems: CartItem[];
 
-  @OneToMany(() => OrderItem, orderItem => orderItem.product)
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.product)
   orderItems: OrderItem[];
 }

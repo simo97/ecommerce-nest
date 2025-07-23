@@ -1,7 +1,6 @@
-
 import { DataSource } from 'typeorm';
 import { Cart } from './Cart.entity';
-import { CART_REPOSITORY, DATA_SOURCE } from '../../common/contants'
+import { CART_REPOSITORY, DATA_SOURCE } from '../../common/contants';
 
 export const cartProviders = [
   {

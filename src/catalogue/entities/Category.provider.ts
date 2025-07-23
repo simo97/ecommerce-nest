@@ -1,7 +1,6 @@
-
 import { DataSource } from 'typeorm';
 import { Category } from './Category.entity';
-import { CATEGORY_REPOSITORY, DATA_SOURCE } from '../../common/contants'
+import { CATEGORY_REPOSITORY, DATA_SOURCE } from '../../common/contants';
 
 export const categoryProviders = [
   {

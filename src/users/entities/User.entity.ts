@@ -21,7 +21,7 @@ export class User extends BaseEntity {
   @Column({
     type: 'enum',
     enum: UserRole,
-    default: UserRole.CUSTOMER
+    default: UserRole.CUSTOMER,
   })
   role: UserRole;
 
@@ -29,9 +29,9 @@ export class User extends BaseEntity {
   refreshToken: string;
 
   // Relationships
-  @OneToOne(() => Cart, cart => cart.user)
+  @OneToOne(() => Cart, (cart) => cart.user)
   cart: Cart;
 
-  @OneToMany(() => Order, order => order.user)
+  @OneToMany(() => Order, (order) => order.user)
   orders: Order[];
 }

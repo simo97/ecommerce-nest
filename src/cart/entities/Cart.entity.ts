@@ -5,13 +5,13 @@ import { CartItem } from './CartItem.entity';
 
 @Entity('carts')
 export class Cart extends BaseEntity {
-  @OneToOne(() => User, user => user.cart)
+  @OneToOne(() => User, (user) => user.cart)
   @JoinColumn({ name: 'userId' })
   user: User;
 
   @Column('uuid')
   userId: string;
 
-  @OneToMany(() => CartItem, cartItem => cartItem.cart, { cascade: true })
+  @OneToMany(() => CartItem, (cartItem) => cartItem.cart, { cascade: true })
   items: CartItem[];
 }

@@ -8,10 +8,11 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { BaseResponseDto } from '../dto/base-response.dto';
+import { QueryFailedError } from 'typeorm';
 
-@Catch()
-export class AllExceptionsFilter implements ExceptionFilter {
-  private readonly logger = new Logger(AllExceptionsFilter.name);
+@Catch(QueryFailedError)
+export class DataBaseExceptionsFilter implements ExceptionFilter {
+  private readonly logger = new Logger(DataBaseExceptionsFilter.name);
 
   catch(exception: unknown, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
@@ -19,7 +20,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
-    let message = 'Internal server error';
+    let message = String(exception);
 
     if (exception instanceof HttpException) {
       status = exception.getStatus();

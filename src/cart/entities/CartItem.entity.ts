@@ -8,14 +8,14 @@ export class CartItem extends BaseEntity {
   @Column('int')
   quantity: number;
 
-  @ManyToOne(() => Cart, cart => cart.items, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Cart, (cart) => cart.items, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'cartId' })
   cart: Cart;
 
   @Column('uuid')
   cartId: string;
 
-  @ManyToOne(() => Product, product => product.cartItems)
+  @ManyToOne(() => Product, (product) => product.cartItems)
   @JoinColumn({ name: 'productId' })
   product: Product;
 

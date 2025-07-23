@@ -11,14 +11,14 @@ export class OrderItem extends BaseEntity {
   @Column('decimal', { precision: 10, scale: 2 })
   priceAtTime: number; // Price when order was placed
 
-  @ManyToOne(() => Order, order => order.items, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Order, (order) => order.items, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'orderId' })
   order: Order;
 
   @Column('uuid')
   orderId: string;
 
-  @ManyToOne(() => Product, product => product.orderItems)
+  @ManyToOne(() => Product, (product) => product.orderItems)
   @JoinColumn({ name: 'productId' })
   product: Product;
 
