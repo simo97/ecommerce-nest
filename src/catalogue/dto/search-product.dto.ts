@@ -1,9 +1,17 @@
-import { IsOptional, IsString, IsBoolean, IsNumber, Min } from 'class-validator';
+import {
+  IsOptional,
+  IsString,
+  IsBoolean,
+  IsNumber,
+  Min,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class SearchProductDto {
-  @ApiPropertyOptional({ description: 'Search term for product name or description' })
+  @ApiPropertyOptional({
+    description: 'Search term for product name or description',
+  })
   @IsOptional()
   @IsString()
   search?: string;
