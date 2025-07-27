@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-
-import { APP_INTERCEPTOR, APP_FILTER } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
+import { APP_INTERCEPTOR, APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { LoggingInterceptor } from './interceptors/logging.interceptor';
 import { AllExceptionsFilter } from './filters/all-exceptions.filter';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
@@ -27,6 +27,14 @@ import { DataBaseExceptionsFilter } from './filters/query-failed-error';
     {
       provide: APP_FILTER,
       useClass: DataBaseExceptionsFilter,
+    },
+    {
+      provide: APP_PIPE,
+      useFactory: () => new ValidationPipe({
+        transform: true,
+        whitelist: true,
+        forbidNonWhitelisted: true,
+      }),
     },
   ],
   exports: [],

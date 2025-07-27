@@ -1,4 +1,4 @@
-import { Controller, Query, Get, ParseIntPipe } from '@nestjs/common';
+import { Controller, Query, Get, ParseIntPipe, Post, ForbiddenException, Body } from '@nestjs/common';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { CatalogueService } from './catalogue.service';
 import { ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
@@ -7,10 +7,14 @@ import { Product } from './entities/Product.entity';
 import { Category } from './entities/Category.entity';
 import { Public } from '../auth/decorators/public.decorator';
 import { SearchProductDto } from './dto/search-product.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('catalogue')
 export class CatalogueController {
-  constructor(private readonly catalogueService: CatalogueService) {}
+  constructor(
+    private readonly catalogueService: CatalogueService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Public()
   @Get('products')
@@ -108,4 +112,35 @@ export class CatalogueController {
   async getCategories(): Promise<Category[]> {
     return this.catalogueService.listCategories();
   }
+
+  @Public()
+  @Post('seed')
+  @ApiOperation({ summary: 'Seed database with sample data (setup only)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Database seeded successfully',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Setup mode not enabled',
+  })
+  async seedDatabase(
+    @Body() options?: { count?: number; clear?: boolean },
+  ): Promise<{ message: string }> {
+    const isSetup = this.configService.get<string>('IS_SETUP');
+
+    if (isSetup !== 'true') {
+      throw new ForbiddenException('Setup mode is not enabled');
+    }
+
+    try {
+      await this.catalogueService.seedDatabase(options);
+      return { message: 'Database seeded successfully' };
+    } catch (error) {
+
+      throw new Error(`Failed to seed database: ${error.message}`);
+    }
+  }
 }
+
+

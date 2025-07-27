@@ -5,12 +5,13 @@ import { CatalogueController } from './catalogue.controller';
 import { Product } from './entities/Product.entity';
 import { Category } from './entities/Category.entity';
 import { AuthModule } from '../auth/auth.module';
+import { User } from '../users/entities/User.entity';
 
 @Module({
   controllers: [CatalogueController],
   providers: [CatalogueService],
   imports: [
-    TypeOrmModule.forFeature([Product, Category]),
+    TypeOrmModule.forFeature([Product, Category, User]),
     forwardRef(() => AuthModule),
   ],
 })
