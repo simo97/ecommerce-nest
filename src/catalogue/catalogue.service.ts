@@ -7,6 +7,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../users/entities/User.entity';
 import { UserRole } from '../common/enums/user-role.enum';
 import { PasswordUtil } from '../common/utils/password.util';
+import { Order } from '../order/entities/Order.entity';
+import { AdminDashboardDto, OrderSummaryDto } from './dto/admin-dashboard.dto';
 
 /**
  *
@@ -20,6 +22,8 @@ export class CatalogueService {
     private categoryRepository: Repository<Category>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    @InjectRepository(Order)
+    private orderRepository: Repository<Order>,
   ) {}
 
   async searchProduct(searchParams: {
@@ -184,5 +188,88 @@ export class CatalogueService {
       productsSeed.push(product)
     }
     await this.productRepository.save(productsSeed);
+  }
+
+  async getAdminDashboard(): Promise<AdminDashboardDto> {
+    const [totalSales, totalOrders, totalProducts, totalUsers, recentOrders] = await Promise.all([
+      this.getTotalSales(),
+      this.getTotalOrders(),
+      this.getTotalProducts(),
+      this.getTotalUsers(),
+      this.getRecentOrders()
+    ]);
+
+    return {
+      totalSales,
+      totalOrders,
+      totalProducts,
+      totalUsers,
+      recentOrders
+    };
+  }
+
+  private async getTotalSales(): Promise<number> {
+    const result = await this.orderRepository
+      .createQueryBuilder('order')
+      .select('SUM(order.totalAmount)', 'total')
+      .getRawOne();
+
+    return parseFloat(result.total) || 0;
+  }
+
+  private async getTotalOrders(): Promise<number> {
+    return await this.orderRepository.count();
+  }
+
+  private async getTotalProducts(): Promise<number> {
+    return await this.productRepository.count();
+  }
+
+  private async getTotalUsers(): Promise<number> {
+    return await this.userRepository.count();
+  }
+
+  private async getRecentOrders(): Promise<OrderSummaryDto[]> {
+    const orders = await this.orderRepository
+      .createQueryBuilder('order')
+      .leftJoinAndSelect('order.user', 'user')
+      .orderBy('order.createdAt', 'DESC')
+      .limit(6)
+      .getMany();
+
+    return orders.map(order => ({
+      id: order.id,
+      totalAmount: parseFloat(order.totalAmount.toString()),
+      status: order.status,
+      customerName: `${order.user.firstName} ${order.user.lastName}`,
+      createdAt: order.createdAt
+    }));
+  }
+
+  async getAdminProducts(
+    page: number,
+    limit: number,
+    filters: { search?: string; category?: string; status?: string }
+  ): Promise<PaginatedResponseDto<Product>> {
+    const skip = (page - 1) * limit;
+    const where: any = {};
+
+    if (filters.status) {
+      where.isActive = filters.status === 'active';
+    }
+
+    if (filters.category) {
+      where.category = { name: filters.category };
+    }
+
+    const [products, total] = await this.productRepository.findAndCount({
+      where,
+      skip,
+      take: limit,
+      relations: ['category'],
+      order: { createdAt: 'DESC' },
+    });
+
+    return new PaginatedResponseDto<Product>(products, total, page, limit);
   }
 }
