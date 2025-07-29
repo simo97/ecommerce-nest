@@ -1,4 +1,4 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { Public } from '../auth/decorators/public.decorator';
 import { UserService } from './user.service';
 import { User } from './entities/User.entity';
@@ -13,15 +13,5 @@ export class UsersController {
   @Get()
   async listUser(): Promise<User[]> {
     return (await this.userService.findMany()) || [];
-  }
-
-  @Public()
-  @Post()
-  async createSampleUser(): Promise<User> {
-    return await this.userService.createSample(
-      'denali@mail.com',
-      'Kimy',
-      'denaliue',
-    );
   }
 }

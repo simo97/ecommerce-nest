@@ -8,7 +8,7 @@ import { User } from '../users/entities/User.entity';
 import { UserRole } from '../common/enums/user-role.enum';
 import { PasswordUtil } from '../common/utils/password.util';
 import { Order } from '../order/entities/Order.entity';
-import { AdminDashboardDto, OrderSummaryDto } from './dto/admin-dashboard.dto';
+import { AdminDashboardDto, AdminOrderSummaryDto } from './dto/admin-dashboard.dto';
 
 /**
  *
@@ -229,7 +229,7 @@ export class CatalogueService {
     return await this.userRepository.count();
   }
 
-  private async getRecentOrders(): Promise<OrderSummaryDto[]> {
+  private async getRecentOrders(): Promise<AdminOrderSummaryDto[]> {
     const orders = await this.orderRepository
       .createQueryBuilder('order')
       .leftJoinAndSelect('order.user', 'user')

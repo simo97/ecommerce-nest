@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class OrderSummaryDto {
+export class AdminOrderSummaryDto {
   @ApiProperty({ description: 'Order ID' })
   id: string;
 
@@ -32,7 +32,7 @@ export class AdminDashboardDto {
 
   @ApiProperty({ 
     description: 'Last 6 orders summary', 
-    type: [OrderSummaryDto] 
+    type: [AdminOrderSummaryDto]
   })
-  recentOrders: OrderSummaryDto[];
+  recentOrders: AdminOrderSummaryDto[];
 }

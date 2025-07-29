@@ -11,6 +11,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { SigninUserDto } from './dto/signin-user.dto';
 import { AuthResponseDto } from './dto/auth-response.dto';
 import { JwtService } from '@nestjs/jwt';
+import { PaginatedResponseDto } from '../common/dto/paginated-response.dto';
 
 @Injectable()
 export class UserService {
@@ -90,5 +91,36 @@ export class UserService {
 
   findByEmail(email: string) {
     return this.userRepository.findOne({ where: { email } });
+  }
+
+  async getAdminUsers(
+    page: number,
+    limit: number,
+    filters: { search?: string; role?: string }
+  ): Promise<PaginatedResponseDto<User>> {
+    const skip = (page - 1) * limit;
+    const where: any = {};
+
+    if (filters.role) {
+      where.role = filters.role;
+    }
+
+    const [users, total] = await this.userRepository.findAndCount({
+      where,
+      skip,
+      take: limit,
+      order: { createdAt: 'DESC' },
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    return new PaginatedResponseDto<User>(users, total, page, limit);
   }
 }
