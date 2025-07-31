@@ -28,3 +28,13 @@ $ pnpm run start:dev
 # production mode
 $ pnpm run start:prod
 ```
+
+## Run the Seeder script.
+
+Make sure the variable `IS_SETUP` and is equal to true. Then you can cal the API endpoint :
+
+```
+POST /api/catalogue/seed
+```
+
+This should setup the seed data in the database.

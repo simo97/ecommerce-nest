@@ -5,6 +5,7 @@ import { OrderItem } from './entities/Orderitem.entity';
 import { Product } from '../catalogue/entities/Product.entity';
 import { OrderService } from './order.service';
 import { OrderController } from './order.controller';
+import { OrderAdminController } from './admin.controller';
 import { AuthModule } from '../auth/auth.module';
 import { CartModule } from '../cart/cart.module';
 
@@ -14,7 +15,7 @@ import { CartModule } from '../cart/cart.module';
     forwardRef(() => AuthModule),
     forwardRef(() => CartModule),
   ],
-  controllers: [OrderController],
+  controllers: [OrderController, OrderAdminController],
   providers: [OrderService],
   exports: [OrderService],
 })

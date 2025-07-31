@@ -54,7 +54,7 @@ export class CartController {
     @Request() req: any,
     @Headers('x-session-token') sessionToken?: string,
   ): Promise<Cart> {
-    const userId = req.user?.sub || null;
+    const userId = req.user?.id || null;
     return this.cartService.addToCart(addToCartDto, userId, sessionToken);
   }
 
@@ -77,11 +77,11 @@ export class CartController {
     @Request() req: any,
     @Headers('x-session-token') sessionToken?: string,
   ): Promise<void> {
-    const userId = req.user?.sub || null;
+    const userId = req.user?.id || null;
     return this.cartService.removeFromCart(userId, itemId, sessionToken);
   }
 
-  @Get()
+  @Get('')
   @ApiOperation({ summary: 'Get the content of the cart' })
   @ApiResponse({
     status: 200,
@@ -99,7 +99,8 @@ export class CartController {
     @Request() req: any,
     @Headers('x-session-token') sessionToken?: string,
   ): Promise<Cart> {
-    const userId = req.user?.sub || null;
+    const userId = req.user?.id || null;
+    console.log({userId})
     return this.cartService.getCart(userId, sessionToken);
   }
 
@@ -118,7 +119,7 @@ export class CartController {
     @Request() req: any,
     @Headers('x-session-token') sessionToken?: string,
   ): Promise<void> {
-    const userId = req.user?.sub || null;
+    const userId = req.user?.id || null;
     return this.cartService.emptyCart(userId, sessionToken);
   }
 
@@ -141,7 +142,7 @@ export class CartController {
     @Request() req: any,
     @Headers('x-session-token') sessionToken?: string,
   ): Promise<CartSummaryDto> {
-    const userId = req.user?.sub || null;
+    const userId = req.user?.id || null;
     return this.cartService.getCartSummary(userId, sessionToken);
   }
 
@@ -166,7 +167,7 @@ export class CartController {
     @Request() req: any,
     @Headers('x-session-token') sessionToken?: string,
   ): Promise<CartItem> {
-    const userId = req.user?.sub || null;
+    const userId = req.user?.id || null;
     return this.cartService.updateCartItem(
       userId,
       itemId,

@@ -11,24 +11,24 @@ export class Cart extends BaseEntity {
     type: () => User,
     required: false,
   })
-  @OneToOne(() => User, (user) => user.cart)
+  @OneToOne(() => User, (user) => user.cart, { nullable: true })
   @JoinColumn({ name: 'userId' })
-  user: User;
+  user?: User;
 
   @ApiProperty({
     description: 'User ID who owns the cart',
     example: 'uuid-string',
     required: false,
   })
-  @Column('uuid')
-  userId: string;
+  @Column('uuid', { nullable: true })
+  userId?: string;
 
   @ApiProperty({
     description: 'Session token for anonymous users',
     example: 'session-token-123',
     required: false,
   })
-  @Column()
+  @Column({ nullable: true })
   userSession?: string;
 
   @ApiProperty({ description: 'Items in the cart', type: () => [CartItem] })

@@ -1,4 +1,4 @@
-import { Controller, Query, Get, ParseIntPipe, Post, ForbiddenException, Body } from '@nestjs/common';
+import { Controller, Query, Get, ParseIntPipe, Post, ForbiddenException, Body, Param } from '@nestjs/common';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { CatalogueService } from './catalogue.service';
 import { ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
@@ -17,7 +17,7 @@ export class CatalogueController {
   ) {}
 
   @Public()
-  @Get('products')
+  @Get('all')
   @ApiOperation({
     summary: 'Get paginated list ofproducts with optional filters',
   })
@@ -65,6 +65,31 @@ export class CatalogueController {
     const { page = 1, limit = 10 } = paginationDto;
     const filters = { category, minPrice, maxPrice };
     return this.catalogueService.listProducts(page, limit, filters);
+  }
+
+  @Public()
+  @Get('/:id')
+  @ApiOperation({
+    summary: 'Retrieve one product object',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Product found successfully',
+    type: Product,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Product not found',
+    type: Product,
+  })
+  async getOneProduct(
+    @Param('id') id: string
+  ): Promise<Product>{
+    const product: Product | null = await this.catalogueService.getProduct(id)
+    if (!product){
+      throw new Error(`Product not found `);
+    }
+    return product
   }
 
   @Public()

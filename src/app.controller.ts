@@ -12,8 +12,4 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @Get('/protected')
-  protectedRoute(): String {
-    return 'You can access it then';
-  }
 }

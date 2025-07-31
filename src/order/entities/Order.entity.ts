@@ -48,7 +48,7 @@ export class Order extends BaseEntity {
     example: '123 Main St, City, Country',
     required: false,
   })
-  @Column()
+  @Column({nullable: true})
   shippingAddress?: string;
 
   @ApiProperty({
@@ -56,6 +56,6 @@ export class Order extends BaseEntity {
     example: 'Please handle with care',
     required: false,
   })
-  @Column()
+  @Column({nullable: true})
   notes?: string;
 }

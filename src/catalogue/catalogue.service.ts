@@ -246,6 +246,10 @@ export class CatalogueService {
     }));
   }
 
+  async getProduct(id: string): Promise<Product | null>{
+    return await this.productRepository.findOneBy({id})
+  }
+
   async getAdminProducts(
     page: number,
     limit: number,

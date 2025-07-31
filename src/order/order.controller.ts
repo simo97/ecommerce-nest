@@ -9,7 +9,6 @@ import {
   Headers,
   HttpCode,
   HttpStatus,
-  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -20,13 +19,9 @@ import {
 } from '@nestjs/swagger';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 import { OrderSummaryDto } from './dto/order-summary.dto';
 import { Order } from './entities/Order.entity';
 import { Public } from '../auth/decorators/public.decorator';
-import { RolesGuard } from '../auth/guards/roles.guard';
-import { UserRole } from '../common/enums/user-role.enum';
-import { Roles } from '../auth/decorators/roles.decorator';
 
 @ApiTags('Orders')
 @Controller('orders')
@@ -56,7 +51,7 @@ export class OrderController {
     @Request() req: any,
     @Headers('x-session-token') sessionToken?: string,
   ): Promise<Order> {
-    const userId = req.user?.sub || null;
+    const userId = req.user?.id || null;
     return this.orderService.createOrder(createOrderDto, userId, sessionToken);
   }
 
@@ -69,7 +64,7 @@ export class OrderController {
   })
   @ApiBearerAuth()
   async getUserOrders(@Request() req: any): Promise<Order[]> {
-    const userId = req.user.sub;
+    const userId = req.user.id;
     return this.orderService.getUserOrders(userId);
   }
 
@@ -82,7 +77,7 @@ export class OrderController {
   })
   @ApiBearerAuth()
   async getOrderSummaries(@Request() req: any): Promise<OrderSummaryDto[]> {
-    const userId = req.user.sub;
+    const userId = req.user.id;
     return this.orderService.getOrderSummaries(userId);
   }
 
@@ -99,27 +94,6 @@ export class OrderController {
     return this.orderService.getOrder(orderId);
   }
 
-  @UseGuards(RolesGuard)
-  @Roles(UserRole.ADMIN)
-  @Patch(':id/status')
-  @ApiOperation({ summary: 'Update order status (admin only)' })
-  @ApiResponse({
-    status: 200,
-    description: 'Order status updated successfully',
-    type: Order,
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Bad request - invalid status transition',
-  })
-  @ApiResponse({ status: 404, description: 'Order not found' })
-  @ApiBearerAuth()
-  async updateOrderStatus(
-    @Param('id') orderId: string,
-    @Body() updateStatusDto: UpdateOrderStatusDto,
-  ): Promise<Order> {
-    return this.orderService.updateOrderStatus(orderId, updateStatusDto);
-  }
 
   @Patch(':id/cancel')
   @HttpCode(HttpStatus.OK)
@@ -139,23 +113,10 @@ export class OrderController {
     @Param('id') orderId: string,
     @Request() req: any,
   ): Promise<Order> {
-    const userId = req.user.sub;
+    const userId = req.user.id;
     return this.orderService.cancelOrder(orderId, userId);
   }
 
-  @UseGuards(RolesGuard)
-  @Roles(UserRole.ADMIN)
-  @Get('admin/all')
-  @ApiOperation({ summary: 'Get all orders (admin only)' })
-  @ApiResponse({
-    status: 200,
-    description: 'All orders retrieved successfully',
-    type: [Order],
-  })
-  @ApiBearerAuth()
-  async getAllOrders(): Promise<Order[]> {
-    return this.orderService.getAllOrders();
-  }
 
   @Public()
   @Post('anonymous')

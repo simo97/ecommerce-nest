@@ -44,7 +44,7 @@ export class CartService {
     }
 
     let cart = await this.getOrCreateCart(userId, sessionToken);
-
+    console.log({cart, userId, sessionToken})
     const existingItem = cart.items?.find(
       (item) => item.productId === productId,
     );
